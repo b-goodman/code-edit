@@ -1,0 +1,43 @@
+{
+  "name": "@bgoodman/code-edit",
+  "version": "1.0.0",
+  "description": "A custom element encapsulating a CodeMirror instance.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/rollup -c ./rollup.config.js",
+    "start": "./node_modules/.bin/serve"
+  },
+  "devDependencies": {
+    "@types/codemirror": "0.0.80",
+    "glob": "^7.1.6",
+    "rimraf": "^3.0.0",
+    "rollup": "^1.27.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-postcss": "^2.0.3",
+    "rollup-plugin-typescript2": "^0.25.2",
+    "serve": "^11.2.0",
+    "typescript": "^3.7.2",
+    "typescript-plugin-css-modules": "^2.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/b-goodman/code-edit.git"
+  },
+  "keywords": [
+    "webcomponent",
+    "custom-element",
+    "tab",
+    "view"
+  ],
+  "author": "Benjamin Goodman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/b-goodman/code-edit/issues"
+  },
+  "homepage": "https://github.com/b-goodman/code-edit#readme",
+  "dependencies": {
+    "codemirror": "^5.49.2"
+  }
+}
