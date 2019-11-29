@@ -34,9 +34,6 @@ var Mode;
     Mode["markdown"] = "markdown";
 })(Mode || (Mode = {}));
 class CodeEdit extends HTMLElement {
-    static get observedAttributes() {
-        return ["mode"];
-    }
     constructor() {
         super();
         const template = document.createElement('template');
@@ -47,8 +44,13 @@ class CodeEdit extends HTMLElement {
         const shadowRoot = this.attachShadow({ mode: 'open' });
         shadowRoot.appendChild(template.content.cloneNode(true));
     }
+    static get observedAttributes() {
+        return ["mode"];
+    }
     connectedCallback() {
-        this.initEditor();
+        return __awaiter(this, void 0, void 0, function* () {
+            this.editor = yield this.initEditor();
+        });
     }
     get mode() {
         return this.getAttribute("mode") || Mode.htmlmixed;
@@ -62,23 +64,38 @@ class CodeEdit extends HTMLElement {
         if (prevEl) {
             prevEl.remove();
         }
-        this.getModeDfn().import.then(() => __awaiter(this, void 0, void 0, function* () {
-            const CodeMirror = yield import('./codemirror-9e4974fe.js');
-            const destEL = this.shadowRoot.querySelector("textarea");
-            const mode = this.getModeDfn().mode;
-            CodeMirror.default.fromTextArea(destEL, {
-                lineNumbers: true,
-                theme: "monokai",
-                mode,
-            });
-            console.log(mode);
-        }));
+        return new Promise((resolve) => {
+            this.getModeDfn().import.then(() => __awaiter(this, void 0, void 0, function* () {
+                const CodeMirror = yield import('./codemirror-9e4974fe.js');
+                const destEL = this.shadowRoot.querySelector("textarea");
+                const mode = this.getModeDfn().mode;
+                const editor = CodeMirror.default.fromTextArea(destEL, {
+                    lineNumbers: true,
+                    theme: "monokai",
+                    mode,
+                });
+                resolve(editor);
+            }));
+        });
+    }
+    getValue(seperator) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.editor) {
+                return this.editor.getValue(seperator);
+            }
+            else {
+                this.editor = yield this.initEditor();
+                return this.editor.getValue(seperator);
+            }
+        });
     }
     attributeChangedCallback(_name, _oldValue, _newValue) {
-        if (_name === "mode" && _oldValue !== _newValue && _oldValue !== null) {
-            console.log("attr. 'mode':", _oldValue, _newValue);
-            this.initEditor();
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            if (_name === "mode" && _oldValue !== _newValue && _oldValue !== null) {
+                console.log("attr. 'mode':", _oldValue, _newValue);
+                this.editor = yield this.initEditor();
+            }
+        });
     }
     getModeDfn() {
         switch (this.mode) {

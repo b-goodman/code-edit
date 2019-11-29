@@ -14,6 +14,9 @@ export default class CodeEdit extends HTMLElement {
         return ["mode"];
     }
 
+    public editor?: CodeMirror.EditorFromTextArea;
+
+
     constructor() {
         super();
 
@@ -27,8 +30,8 @@ export default class CodeEdit extends HTMLElement {
         shadowRoot.appendChild(template.content.cloneNode(true));
     }
 
-    connectedCallback() {
-        this.initEditor();
+    async connectedCallback() {
+        this.editor = await this.initEditor();
     }
 
     public get mode(): Mode {
@@ -39,29 +42,40 @@ export default class CodeEdit extends HTMLElement {
         this.setAttribute("mode", newState);
     }
 
-    public initEditor(): void {
+    public initEditor(): Promise<CodeMirror.EditorFromTextArea> {
         const prevEl = this.shadowRoot!.querySelector<HTMLDivElement>("div.CodeMirror");
         console.log("prevEL",prevEl)
         if (prevEl) {
             prevEl.remove();
         };
-        this.getModeDfn().import.then( async () => {
-            const CodeMirror = await import("codemirror");
-            const destEL = this.shadowRoot!.querySelector<HTMLTextAreaElement>("textarea")!;
-            const mode = this.getModeDfn().mode;
-            CodeMirror.default.fromTextArea(destEL, {
-                lineNumbers: true,
-                theme: "monokai",
-                mode,
+        return new Promise( (resolve) => {
+            this.getModeDfn().import.then( async () => {
+                const CodeMirror = await import("codemirror");
+                const destEL = this.shadowRoot!.querySelector<HTMLTextAreaElement>("textarea")!;
+                const mode = this.getModeDfn().mode;
+                const editor = CodeMirror.default.fromTextArea(destEL, {
+                    lineNumbers: true,
+                    theme: "monokai",
+                    mode,
+                });
+                resolve(editor);
             });
-            console.log(mode)
         })
     }
 
-    attributeChangedCallback(_name: string, _oldValue: string, _newValue: string) {
+    public async getValue(seperator?: string): Promise<string> {
+        if (this.editor) {
+            return this.editor.getValue(seperator)
+        } else {
+            this.editor = await this.initEditor();
+            return this.editor.getValue(seperator);
+        }
+    }
+
+    async attributeChangedCallback(_name: string, _oldValue: string, _newValue: string) {
         if (_name === "mode" && _oldValue !== _newValue && _oldValue !== null) {
             console.log("attr. 'mode':",_oldValue,_newValue)
-            this.initEditor();
+            this.editor = await this.initEditor();
         }
     }
 

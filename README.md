@@ -20,9 +20,21 @@ yarn add @bgoodman/code-edit
 
 ## Attributes
 
-`mode`
-    Specify code type using a language mode.  Options include:
-    + `htmlmixed` - default (html/css/js)
-    + `javascript`
-    + `typescript`
-    + `markdown`
+### `mode`
+
+Specify code type using a language mode.  Options include:
+
++ `"htmlmixed"` - default (html/css/js)
++ `"javascript"`
++ `"typescript"`
++ `"markdown"`
+
+## Methods
+
+### [`getValue`](https://codemirror.net/doc/manual.html#getValue)
+
+Get the current editor content.  You can pass it an optional argument to specify the string to be used to separate lines (defaults to "\n").
+
+```typescript
+getValue(seperator?: string): Promise<string>
+```
