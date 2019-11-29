@@ -1,5 +1,6 @@
 import style from "codemirror/lib/codemirror.css";
 import theme from "codemirror/theme/monokai.css";
+import base from "./index.scss";
 
 enum Mode {
     htmlmixed = "htmlmixed",
@@ -22,7 +23,7 @@ export default class CodeEdit extends HTMLElement {
 
         const template = document.createElement('template');
         template.innerHTML = `
-            <style>${style}${theme}</style>
+            <style>${style}${theme}${base}</style>
             <textarea></textarea>
         `;
 

@@ -11,6 +11,12 @@ glob.sync('**/*/*.css').forEach((css) => {  // Use forEach because https://githu
 		fs.writeFileSync(definition, 'const mod: { [cls: string]: string }\nexport default mod\n')
 });
 
+glob.sync('**/*/*.scss').forEach((scss) => {  // Use forEach because https://github.com/rollup/rollup/issues/1873
+	const definition = `${scss}.d.ts`
+	if (!fs.existsSync(definition))
+		fs.writeFileSync(definition, 'const mod: { [cls: string]: string }\nexport default mod\n')
+});
+
 export default {
     input: 'src/index.ts',
     output: {
