@@ -25,3 +25,4 @@ yarn add @bgoodman/code-edit
     + `htmlmixed` - default (html/css/js)
     + `javascript`
     + `typescript`
+    + `markdown`

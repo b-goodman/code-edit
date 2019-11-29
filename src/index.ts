@@ -4,7 +4,8 @@ import theme from "codemirror/theme/monokai.css";
 enum Mode {
     htmlmixed = "htmlmixed",
     javascript = "javascript",
-    typescript = "typescript"
+    typescript = "typescript",
+    markdown = "markdown",
 }
 
 export default class CodeEdit extends HTMLElement {
@@ -81,13 +82,21 @@ export default class CodeEdit extends HTMLElement {
                     }
                 };
             case Mode.typescript:
-                        return {
-                            import: import("codemirror/mode/javascript/javascript.js"),
-                            mode: {
-                                name: Mode.javascript,
-                                typescript: true,
-                            }
-                        };
+                return {
+                    import: import("codemirror/mode/javascript/javascript.js"),
+                    mode: {
+                        name: Mode.javascript,
+                        typescript: true,
+                    }
+                };
+            case Mode.markdown:
+                return {
+                    import: import("codemirror/mode/markdown/markdown.js"),
+                    mode: {
+                        name: Mode.markdown,
+                        highlightFormatting: true,
+                    }
+                }
             default:
                 return {
                     import: import("codemirror/mode/htmlmixed/htmlmixed.js"),
