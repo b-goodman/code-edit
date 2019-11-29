@@ -31,6 +31,7 @@ var Mode;
     Mode["htmlmixed"] = "htmlmixed";
     Mode["javascript"] = "javascript";
     Mode["typescript"] = "typescript";
+    Mode["markdown"] = "markdown";
 })(Mode || (Mode = {}));
 class CodeEdit extends HTMLElement {
     static get observedAttributes() {
@@ -83,29 +84,37 @@ class CodeEdit extends HTMLElement {
         switch (this.mode) {
             case Mode.htmlmixed:
                 return {
-                    import: import('./htmlmixed-7b11b894.js'),
+                    import: import('./htmlmixed-740f8438.js'),
                     mode: {
                         name: this.mode
                     }
                 };
             case Mode.javascript:
                 return {
-                    import: import('./javascript-9aa3c90e.js'),
+                    import: import('./javascript-3673b630.js'),
                     mode: {
                         name: this.mode,
                     }
                 };
             case Mode.typescript:
                 return {
-                    import: import('./javascript-9aa3c90e.js'),
+                    import: import('./javascript-3673b630.js'),
                     mode: {
                         name: Mode.javascript,
                         typescript: true,
                     }
                 };
+            case Mode.markdown:
+                return {
+                    import: import('./markdown-2d5480e5.js'),
+                    mode: {
+                        name: Mode.markdown,
+                        highlightFormatting: true,
+                    }
+                };
             default:
                 return {
-                    import: import('./htmlmixed-7b11b894.js'),
+                    import: import('./htmlmixed-740f8438.js'),
                     mode: {
                         name: this.mode
                     }
