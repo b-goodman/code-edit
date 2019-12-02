@@ -43,11 +43,17 @@ export default class CodeEdit extends HTMLElement {
         this.setAttribute("mode", newState);
     }
 
+    public get storageKey() {
+        return this.getAttribute("storage-key") || undefined;
+    }
+
     public initEditor(): Promise<CodeMirror.EditorFromTextArea> {
         const prevEl = this.shadowRoot!.querySelector<HTMLDivElement>("div.CodeMirror");
-        console.log("prevEL",prevEl)
         if (prevEl) {
             prevEl.remove();
+        };
+        if (this.editor) {
+            this.editor.off("change", this.saveSessionInput)
         };
         return new Promise( (resolve) => {
             this.getModeDfn().import.then( async () => {
@@ -59,6 +65,13 @@ export default class CodeEdit extends HTMLElement {
                     theme: "monokai",
                     mode,
                 });
+                const initialState = this.loadSessionInputData();
+                if (initialState) {
+                    this.setValue(initialState);
+                };
+                if (this.storageKey) {
+                    editor.on("change", this.saveSessionInput)
+                }
                 resolve(editor);
             });
         })
@@ -84,9 +97,19 @@ export default class CodeEdit extends HTMLElement {
 
     async attributeChangedCallback(_name: string, _oldValue: string, _newValue: string) {
         if (_name === "mode" && _oldValue !== _newValue && _oldValue !== null) {
-            console.log("attr. 'mode':",_oldValue,_newValue)
             this.editor = await this.initEditor();
         }
+    }
+
+    private loadSessionInputData() {
+        return this.storageKey
+            ? window.localStorage.getItem(`${window.location.href}-${this.storageKey}`) || undefined
+            : undefined
+    }
+
+    private saveSessionInput = async (_instance: CodeMirror.Editor, _changes: CodeMirror.EditorChangeLinkedList) => {
+        const input = await this.getValue();
+        window.localStorage.setItem(`${window.location.href}-${this.storageKey}`, input);
     }
 
     private getModeDfn() {

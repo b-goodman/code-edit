@@ -29,6 +29,12 @@ Specify code type using a language mode.  Options include:
 + `"typescript"`
 + `"markdown"`
 
+## `storage-key`
+
+If set, allows the editors value to persist accross sessions using `window.localStorage`.
+Data is stored as key `${window.location.href}-${this.storageKey}`.
+If unset, the editor's value will reset each time the component loads.
+
 ## Methods
 
 ### [`getValue`](https://codemirror.net/doc/manual.html#getValue)

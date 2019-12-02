@@ -38,6 +38,11 @@ var Mode;
 class CodeEdit extends HTMLElement {
     constructor() {
         super();
+        this.saveSessionInput = (_instance, _changes) => __awaiter(this, void 0, void 0, function* () {
+            const input = yield this.getValue();
+            window.localStorage.setItem(`${window.location.href}-${this.storageKey}`, input);
+            console.log(input);
+        });
         const template = document.createElement('template');
         template.innerHTML = `
             <style>${css}${css$1}${css$2}</style>
@@ -60,11 +65,16 @@ class CodeEdit extends HTMLElement {
     set mode(newState) {
         this.setAttribute("mode", newState);
     }
+    get storageKey() {
+        return this.getAttribute("storage-key") || undefined;
+    }
     initEditor() {
         const prevEl = this.shadowRoot.querySelector("div.CodeMirror");
-        console.log("prevEL", prevEl);
         if (prevEl) {
             prevEl.remove();
+        }
+        if (this.editor) {
+            this.editor.off("change", this.saveSessionInput);
         }
         return new Promise((resolve) => {
             this.getModeDfn().import.then(() => __awaiter(this, void 0, void 0, function* () {
@@ -76,6 +86,13 @@ class CodeEdit extends HTMLElement {
                     theme: "monokai",
                     mode,
                 });
+                const initialState = this.loadSessionInputData();
+                if (initialState) {
+                    this.setValue(initialState);
+                }
+                if (this.storageKey) {
+                    editor.on("change", this.saveSessionInput);
+                }
                 resolve(editor);
             }));
         });
@@ -105,10 +122,14 @@ class CodeEdit extends HTMLElement {
     attributeChangedCallback(_name, _oldValue, _newValue) {
         return __awaiter(this, void 0, void 0, function* () {
             if (_name === "mode" && _oldValue !== _newValue && _oldValue !== null) {
-                console.log("attr. 'mode':", _oldValue, _newValue);
                 this.editor = yield this.initEditor();
             }
         });
+    }
+    loadSessionInputData() {
+        return this.storageKey
+            ? window.localStorage.getItem(`${window.location.href}-${this.storageKey}`) || undefined
+            : undefined;
     }
     getModeDfn() {
         switch (this.mode) {
