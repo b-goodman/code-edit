@@ -38,3 +38,11 @@ Get the current editor content.  You can pass it an optional argument to specify
 ```typescript
 getValue(seperator?: string): Promise<string>
 ```
+
+### [`setValue`](https://codemirror.net/doc/manual.html#setValue)
+
+Set the editor content.
+
+```typescript
+setValue(code: string): Promise<void>
+```

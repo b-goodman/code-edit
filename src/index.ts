@@ -73,6 +73,15 @@ export default class CodeEdit extends HTMLElement {
         }
     }
 
+    public async setValue(code: string): Promise<void> {
+        if (this.editor) {
+            return this.editor.setValue(code)
+        } else {
+            this.editor = await this.initEditor();
+            return this.editor.setValue(code);
+        }
+    }
+
     async attributeChangedCallback(_name: string, _oldValue: string, _newValue: string) {
         if (_name === "mode" && _oldValue !== _newValue && _oldValue !== null) {
             console.log("attr. 'mode':",_oldValue,_newValue)

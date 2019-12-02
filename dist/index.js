@@ -91,6 +91,17 @@ class CodeEdit extends HTMLElement {
             }
         });
     }
+    setValue(code) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.editor) {
+                return this.editor.setValue(code);
+            }
+            else {
+                this.editor = yield this.initEditor();
+                return this.editor.setValue(code);
+            }
+        });
+    }
     attributeChangedCallback(_name, _oldValue, _newValue) {
         return __awaiter(this, void 0, void 0, function* () {
             if (_name === "mode" && _oldValue !== _newValue && _oldValue !== null) {
