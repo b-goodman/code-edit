@@ -41,7 +41,6 @@ class CodeEdit extends HTMLElement {
         this.saveSessionInput = (_instance, _changes) => __awaiter(this, void 0, void 0, function* () {
             const input = yield this.getValue();
             window.localStorage.setItem(`${window.location.href}-${this.storageKey}`, input);
-            console.log(input);
         });
         const template = document.createElement('template');
         template.innerHTML = `
